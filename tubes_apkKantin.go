@@ -5,8 +5,8 @@ import "fmt"
 const NMAX int = 10
 
 type makanan struct {
-	nama  string
-	harga int
+	nama, kategori string
+	harga          int
 }
 type arrMkn [NMAX]makanan
 
@@ -50,17 +50,18 @@ func bacaData(A *arrMkn, B int) {
 	// Masukkan data ke dalam array
 	for i := 0; i < B; i++ {
 		if startIndex+i < NMAX {
-			fmt.Print("Nama makanan dan harga makanan: ")
-			fmt.Scan(&(*A)[startIndex+i].nama, &(*A)[startIndex+i].harga)
+			fmt.Print("Nama makanan, kategori dan harga makanan: ")
+			fmt.Scan(&(*A)[startIndex+i].nama, &(*A)[startIndex+i].kategori, &(*A)[startIndex+i].harga)
 		}
 	}
 }
 
 func cetakData(A arrMkn) {
+	fmt.Println()
 	fmt.Println("Data makanan:")
 	for i, m := range A {
 		if m.nama != "" {
-			fmt.Printf("Makanan ke-%d: Nama=%s, Harga=%d\n", i+1, m.nama, m.harga)
+			fmt.Printf("| Makanan ke-%d: Nama = %s, Kategori = %s, Harga = %d | \n", i+1, m.nama, m.kategori, m.harga)
 		}
 	}
 }

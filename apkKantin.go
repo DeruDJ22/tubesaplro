@@ -41,7 +41,12 @@ func mulai() {
 			fmt.Scan(&namaLama)
 			fmt.Print("Masukkan nama tenant baru: ")
 			fmt.Scan(&namaBaru)
-			editTenant(name, namaBaru, namaLama, n)
+			editTenant(&name, namaBaru, namaLama, n)
+		} else if a == 4 {
+			var nama string
+			fmt.Print("Masukkan nama tenant yang ingin dihapus: ")
+			fmt.Scan(&nama)
+			hapusTenant(&name, nama, n)
 		}
 	}
 }
@@ -81,18 +86,29 @@ func dataTenant(t arrTenant) {
 	fmt.Println("--------------------------------------------------------------------------------------------")
 }
 
-func editTenant(nama arrTenant, namaBaru, namaLama string, n int) {
-	index := findTenant(nama, n, namaLama)
+func editTenant(nama *arrTenant, namaBaru string, namaLama string, n int) {
+	index := findTenant(*nama, n, namaLama)
 	if index == -1 {
 		fmt.Println("Tenant tidak ditemukan")
 		return
 	}
-	if findTenant(nama, n, namaBaru) != -1 {
+	if findTenant(*nama, n, namaBaru) != -1 {
 		fmt.Println("Nama tenant sudah ada")
 		return
 	}
 	fmt.Println("Data berhasil di update!")
 	nama[index].nama = namaBaru
+}
+
+func hapusTenant(nama *arrTenant, tenant string, n int) {
+	index := findTenant(*nama, n, tenant)
+	if index == -1 {
+		fmt.Println("Tenant tidak ditemukan")
+		return
+	} else {
+		fmt.Println("Data berhasil dihapus")
+		nama[index].nama = ""
+	}
 }
 
 func findTenant(T arrTenant, n int, name string) int {

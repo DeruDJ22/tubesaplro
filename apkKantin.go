@@ -62,7 +62,12 @@ func mulai() {
 			fmt.Scan(&nama)
 			hapusTenant(&name, nama, &n)
 		} else if a == 5 {
-			//transaksi
+			var amount float64
+			fmt.Print("Masukkan nama tenant: ")
+			fmt.Scan(&nama)
+			fmt.Print("Masukkan jumlah transaksi: ")
+			fmt.Scan(&amount)
+			transaksi(&name, nama, n, amount)
 		} else if a == 6 {
 			fmt.Println("Sampai jumpa lagi")
 		} else {
@@ -148,6 +153,21 @@ func hapusTenant(nama *arrTenant, tenant string, n *int) {
 		*n--
 	}
 	fmt.Println(status)
+}
+
+func transaksi(name *arrTenant, tenant string, n int, amount float64) {
+	index := findTenant(*name, n, tenant)
+	if index == -1 {
+		fmt.Println("Tenant tidak ditemukan")
+	} else {
+		(*name)[index].transaksi++
+		(*name)[index].pendapatan += amount
+		adminRevenue := amount * 0.25
+		tenantRevenue := amount * 0.75
+		fmt.Printf("Transaksi dicatat untuk %s: Total %.2f (Admin: %.2f, Tenant: %.2f)\n", (*name)[index].nama, amount, adminRevenue, tenantRevenue)
+		*&name[index].uAdmin += adminRevenue
+		*&name[index].uTenant += tenantRevenue
+	}
 }
 
 func findTenant(T arrTenant, n int, name string) int {

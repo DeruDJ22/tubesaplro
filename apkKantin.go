@@ -1,8 +1,6 @@
 package main
 
-import (
-	"fmt"
-)
+import "fmt"
 
 const NMAX int = 10
 
@@ -47,8 +45,11 @@ func mulai() {
 			if sort == 1 {
 				selectionSort(&name, n)
 				dataTenant(name)
+			} else if sort == 2 {
+				insertionSort(&name, n)
+				dataTenant(name)
 			} else {
-				//else
+				fmt.Println("Pilih angka yang benar")
 			}
 		} else if a == 3 {
 			var namaBaru, namaLama string
@@ -60,14 +61,20 @@ func mulai() {
 		} else if a == 4 {
 			fmt.Print("Masukkan nama tenant yang ingin dihapus: ")
 			fmt.Scan(&nama)
+			urutkanNama(&name, n)
 			hapusTenant(&name, nama, &n)
 		} else if a == 5 {
 			var amount float64
+			var jum_transaksi int
 			fmt.Print("Masukkan nama tenant: ")
 			fmt.Scan(&nama)
 			fmt.Print("Masukkan jumlah transaksi: ")
-			fmt.Scan(&amount)
-			transaksi(&name, nama, n, amount)
+			fmt.Scan(&jum_transaksi)
+			for i := 0; i < jum_transaksi; i++ {
+				fmt.Printf("Masukkan jumlah transaksi ke-%d: ", i+1)
+				fmt.Scan(&amount)
+				transaksi(&name, nama, n, amount)
+			}
 		} else if a == 6 {
 			fmt.Println("Sampai jumpa lagi")
 		} else {
@@ -76,19 +83,15 @@ func mulai() {
 	}
 }
 
-// Fungsi untuk menambah tenant
+// menambah data tenant
 func tambahTenant(t *arrTenant, bnyk int, n *int) {
 	startIndex := 0
 	for startIndex < NMAX && (*t)[startIndex].nama != "" {
 		startIndex++
 	}
-
-	// Jika array tidak cukup besar untuk menampung data baru, beri pesan kesalahan
 	if startIndex+bnyk > NMAX {
 		fmt.Println("Tidak cukup ruang untuk menambah data baru")
 	} else {
-
-		// Masukkan data ke dalam array
 		for i := 0; i < bnyk; i++ {
 			if startIndex+i < NMAX {
 				var cek string
@@ -107,6 +110,7 @@ func tambahTenant(t *arrTenant, bnyk int, n *int) {
 	}
 }
 
+// menampilkan data tenant
 func dataTenant(t arrTenant) {
 	addDAta := false
 	fmt.Println()
@@ -124,6 +128,7 @@ func dataTenant(t arrTenant) {
 	fmt.Println("--------------------------------------------------------------------------------------------")
 }
 
+// edit tenant
 func editTenant(nama *arrTenant, namaBaru string, namaLama string, n int) {
 	index := findTenant(*nama, n, namaLama)
 	status := ""
@@ -140,21 +145,22 @@ func editTenant(nama *arrTenant, namaBaru string, namaLama string, n int) {
 	fmt.Println(status)
 }
 
-func hapusTenant(nama *arrTenant, tenant string, n *int) {
-	index := binarySort(*&nama, *n, tenant)
-	status := ""
+// hapus data tenant
+func hapusTenant(name *arrTenant, tenant string, n *int) {
+	index := binarySearch(*name, *n, tenant)
 	if index == -1 {
-		status = "Tenant tidak ditemukan"
+		fmt.Println("Tenant tidak ditemukan")
 	} else {
-		status = "Data berhasil dihapus"
+		fmt.Println("Data berhasil dihapus")
 		for i := index; i < *n-1; i++ {
-			nama[i] = nama[i+1]
+			name[i] = name[i+1]
 		}
+		name[*n-1] = Tenant{}
 		*n--
 	}
-	fmt.Println(status)
 }
 
+// menambah transaksi tenant
 func transaksi(name *arrTenant, tenant string, n int, amount float64) {
 	index := findTenant(*name, n, tenant)
 	if index == -1 {
@@ -170,6 +176,7 @@ func transaksi(name *arrTenant, tenant string, n int, amount float64) {
 	}
 }
 
+// mencari index tenant
 func findTenant(T arrTenant, n int, name string) int {
 	var found int = -1
 	var i int = 0
@@ -182,24 +189,24 @@ func findTenant(T arrTenant, n int, name string) int {
 	return found
 }
 
-func binarySort(T *arrTenant, n int, name string) int {
-	var found int = -1
-	var med int
-	var kr int = 0
-	var kn int = n - 1
-	for kr <= kn && found == -1 {
-		med = (kr + kn) / 2
-		if name > T[med].nama {
+// mencari index tenant dengan binary sort
+func binarySearch(t arrTenant, n int, name string) int {
+	kr := 0
+	kn := n - 1
+	for kr <= kn {
+		med := (kr + kn) / 2
+		if t[med].nama < name {
 			kr = med + 1
-		} else if name < T[med].nama {
+		} else if t[med].nama > name {
 			kn = med - 1
 		} else {
-			found = med
+			return med
 		}
 	}
-	return found
+	return -1
 }
 
+// mensorting nama tenant dengan selection sort
 func selectionSort(T *arrTenant, n int) {
 	for i := 0; i < n-1; i++ {
 		idx_max := i
@@ -212,21 +219,33 @@ func selectionSort(T *arrTenant, n int) {
 	}
 }
 
-func insertionSort(T *arrTenant, n int) {
-	var i, j int
-	var temp Tenant
-	i = 1
-	for i <= n {
-		temp = T[i]
-		j = i
-		for j > 0 && temp.transaksi < T[j-1].transaksi {
-			T[j] = T[j-1]
+// mensorting nama tenant dengan insertion sort
+func insertionSort(t *arrTenant, n int) {
+	for i := 1; i < n; i++ {
+		temp := t[i]
+		j := i
+		for j > 0 && temp.transaksi < t[j-1].transaksi {
+			t[j] = t[j-1]
 			j--
 		}
-		T[j] = temp
+		t[j] = temp
 	}
 }
 
+// urut nama tenatn
+func urutkanNama(t *arrTenant, n int) {
+	for i := 1; i < n; i++ {
+		temp := t[i]
+		j := i
+		for j > 0 && temp.nama < t[j-1].nama {
+			t[j] = t[j-1]
+			j--
+		}
+		t[j] = temp
+	}
+}
+
+// cek nama tenant
 func cekTenant(T arrTenant, nama string) int {
 	for i := 0; i < NMAX; i++ {
 		if T[i].nama == nama {

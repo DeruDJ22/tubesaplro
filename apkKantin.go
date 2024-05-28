@@ -32,7 +32,11 @@ func mulai() {
 		if a == 1 {
 			fmt.Print("Berapa banyak data yang ingin ditambah: ")
 			fmt.Scan(&nTambah)
-			tambahTenant(&name, nTambah, &n)
+			if nTambah == 0 {
+				fmt.Println("Data tidak bertambah")
+			} else {
+				tambahTenant(&name, nTambah, &n)
+			}
 		} else if a == 2 {
 			var sort int
 			fmt.Println("___________________________")
@@ -44,10 +48,10 @@ func mulai() {
 			fmt.Scan(&sort)
 			if sort == 1 {
 				selectionSort(&name, n)
-				dataTenant(name)
+				dataTenant(name, n)
 			} else if sort == 2 {
 				insertionSort(&name, n)
-				dataTenant(name)
+				dataTenant(name, n)
 			} else {
 				fmt.Println("Pilih angka yang benar")
 			}
@@ -85,25 +89,21 @@ func mulai() {
 
 // menambah data tenant
 func tambahTenant(t *arrTenant, bnyk int, n *int) {
-	startIndex := 0
-	for startIndex < NMAX && (*t)[startIndex].nama != "" {
-		startIndex++
-	}
-	if startIndex+bnyk > NMAX {
+	if *n+bnyk > NMAX {
 		fmt.Println("Tidak cukup ruang untuk menambah data baru")
 	} else {
 		for i := 0; i < bnyk; i++ {
-			if startIndex+i < NMAX {
+			if *n < NMAX {
 				var cek string
 				fmt.Print("Nama Tenant: ")
 				fmt.Scan(&cek)
-				*n++
 				if cekTenant(*t, cek) != -1 {
 					fmt.Println("Data tenant sudah terdaftar")
 					i--
 				} else {
 					fmt.Println("Nama tenant berhasil dibuat")
-					(*t)[startIndex+i].nama = cek
+					(*t)[*n].nama = cek
+					*n++
 				}
 			}
 		}
@@ -111,12 +111,12 @@ func tambahTenant(t *arrTenant, bnyk int, n *int) {
 }
 
 // menampilkan data tenant
-func dataTenant(t arrTenant) {
+func dataTenant(t arrTenant, n int) {
 	addDAta := false
 	fmt.Println()
 	fmt.Println("--------------------------------------------------------------------------------------------")
 	fmt.Println("Data tenant:")
-	for i := 0; i < NMAX; i++ {
+	for i := 0; i < n; i++ {
 		if t[i].nama != "" {
 			fmt.Printf("Tenant ke-%d: Nama Tenant = %s, Jumlah Transaksi = %d, Hasil Pendapatan = %.2f (Admin: %.2f, Tenant: %.2f)\n", i+1, t[i].nama, t[i].transaksi, t[i].pendapatan, t[i].uAdmin, t[i].uTenant)
 			addDAta = true

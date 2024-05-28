@@ -206,6 +206,19 @@ func binarySearch(t arrTenant, n int, name string) int {
 	return -1
 }
 
+// urut nama tenatn unbtuk binary search
+func urutkanNama(t *arrTenant, n int) {
+	for i := 1; i < n; i++ {
+		temp := t[i]
+		j := i
+		for j > 0 && temp.nama < t[j-1].nama {
+			t[j] = t[j-1]
+			j--
+		}
+		t[j] = temp
+	}
+}
+
 // mensorting nama tenant dengan selection sort
 func selectionSort(T *arrTenant, n int) {
 	for i := 0; i < n-1; i++ {
@@ -225,19 +238,6 @@ func insertionSort(t *arrTenant, n int) {
 		temp := t[i]
 		j := i
 		for j > 0 && temp.transaksi < t[j-1].transaksi {
-			t[j] = t[j-1]
-			j--
-		}
-		t[j] = temp
-	}
-}
-
-// urut nama tenatn
-func urutkanNama(t *arrTenant, n int) {
-	for i := 1; i < n; i++ {
-		temp := t[i]
-		j := i
-		for j > 0 && temp.nama < t[j-1].nama {
 			t[j] = t[j-1]
 			j--
 		}

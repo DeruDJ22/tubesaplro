@@ -102,7 +102,7 @@ func tambahTenant(t *arrTenant, bnyk int, n *int) {
 					i--
 				} else {
 					fmt.Println("Nama tenant berhasil dibuat")
-					(*t)[*n].nama = cek
+					t[*n].nama = cek
 					*n++
 				}
 			}
@@ -166,13 +166,13 @@ func transaksi(name *arrTenant, tenant string, n int, amount float64) {
 	if index == -1 {
 		fmt.Println("Tenant tidak ditemukan")
 	} else {
-		(*name)[index].transaksi++
-		(*name)[index].pendapatan += amount
+		name[index].transaksi++
+		name[index].pendapatan += amount
 		adminRevenue := amount * 0.25
 		tenantRevenue := amount * 0.75
-		fmt.Printf("Transaksi dicatat untuk %s: Total %.2f (Admin: %.2f, Tenant: %.2f)\n", (*name)[index].nama, amount, adminRevenue, tenantRevenue)
-		*&name[index].uAdmin += adminRevenue
-		*&name[index].uTenant += tenantRevenue
+		fmt.Printf("Transaksi dicatat untuk %s: Total %.2f (Admin: %.2f, Tenant: %.2f)\n", name[index].nama, amount, adminRevenue, tenantRevenue)
+		name[index].uAdmin += adminRevenue
+		name[index].uTenant += tenantRevenue
 	}
 }
 
